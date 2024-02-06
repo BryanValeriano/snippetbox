@@ -12,8 +12,6 @@ func main() {
 	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
 
-	describe(mux)
-
 	log.Print("starting server on :4000")
 
 	err := http.ListenAndServe(":4000", mux)
