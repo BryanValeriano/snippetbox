@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -16,8 +15,4 @@ func main() {
 
 	err := http.ListenAndServe(":4000", mux)
 	log.Fatal(err)
-}
-
-func describe(i any) {
-	fmt.Printf("(%v, %T)\n", i, i)
 }
