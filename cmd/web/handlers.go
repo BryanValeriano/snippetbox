@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 )
@@ -19,12 +19,12 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		log.Print(err.Error())
+		app.logger.Error(err.Error(), slog.String("method", r.Method), slog.String("uri", r.URL.RequestURI()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
-		log.Print(err.Error())
+		app.logger.Error(err.Error(), slog.String("method", r.Method), slog.String("uri", r.URL.RequestURI()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
