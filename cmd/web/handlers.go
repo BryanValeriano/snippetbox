@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -19,19 +18,17 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/base.tmpl",
-		"./ui/html/pages/home.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
 	data := templateData{
 		Snippets: snippets,
+	}
+
+	page := "home.tmpl"
+
+	ts, ok := app.templateCache[page]
+	if !ok {
+		err := fmt.Errorf("the tample %s does not exist", page)
+		app.serverError(w, r, err)
+		return
 	}
 
 	err = ts.ExecuteTemplate(w, "base", data)
@@ -57,20 +54,17 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/view.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
 	data := templateData{
 		Snippet: snippet,
+	}
+
+	page := "view.tmpl"
+
+	ts, ok := app.templateCache[page]
+	if !ok {
+		err := fmt.Errorf("the tample %s does not exist", page)
+		app.serverError(w, r, err)
+		return
 	}
 
 	err = ts.ExecuteTemplate(w, "base", data)
