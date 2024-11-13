@@ -93,12 +93,8 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	if form.Expires != 1 && form.Expires != 7 && form.Expires != 365 {
 		form.FieldErrors["expires"] = "This field must equal 1, 7 or 365"
 	}
-	if len(form.FieldErrors) > 0 {
-		fmt.Fprint(w, form.FieldErrors)
-		return
-	}
 
-	if err != nil {
+	if len(form.FieldErrors) > 0 {
 		data := app.newTemplateData(r)
 		data.Form = form
 		app.render(w, r, http.StatusUnprocessableEntity, "create.tmpl", data)
